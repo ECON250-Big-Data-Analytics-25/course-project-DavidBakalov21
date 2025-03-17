@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: dbakalov
+    database: econ250-2025
+    schema: dbakalov
+    tables:
+      - name: sheet_external
+      - name: assignment1_full
