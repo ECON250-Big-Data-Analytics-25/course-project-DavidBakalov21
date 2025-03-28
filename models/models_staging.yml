@@ -5,6 +5,7 @@ models:
     description: "Clean transaction data"
     columns:
       - name: transaction.transactionId
+        description: "description fro transaction.transactionId"
         data_tests:
           - not_null
       - name: transaction.transactionRevenue
