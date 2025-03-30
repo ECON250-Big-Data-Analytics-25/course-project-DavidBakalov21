@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: stg_assignment3_uk_wiki
+    columns:
+      - name: src
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["mobile", "desktop"]
+  - name: fct_assignment3_top200
+  - name: int_assignment3_uk_wiki
