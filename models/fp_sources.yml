@@ -39,6 +39,8 @@ sources:
               - not_null
           - name: seller_id
             description: seller unique identifier
+            tests:
+              - not_null
           - name: shipping_limit_date
             description: Shows the seller shipping limit date for handling the order over to the logistic partner.
           - name: price
@@ -56,6 +58,15 @@ sources:
             description: a customer may pay an order with more than one payment method. If he does so, a sequence will be created to accommodate all payments.
           - name: payment_type
             description: method of payment chosen by the customer.
+            tests:
+              - not_null
+              - accepted_values:
+                  values:
+                    - credit_card
+                    - voucher
+                    - not_defined
+                    - boleto
+                    - debit_card
           - name: payment_installments
             description: number of installments chosen by the customer.
           - name: payment_value
@@ -74,6 +85,18 @@ sources:
               - not_null
           - name: order_status
             description: Reference to the order status (delivered, shipped, etc).
+            tests:
+              - not_null
+              - accepted_values:
+                  values:
+                    - approved
+                    - canceled
+                    - created
+                    - delivered
+                    - invoiced
+                    - processing
+                    - shipped
+                    - unavailable
           - name: order_purchase_timestamp
             description: Shows the purchase timestamp.
           - name: order_approved_at
