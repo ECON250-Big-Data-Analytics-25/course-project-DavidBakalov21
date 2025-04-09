@@ -83,7 +83,7 @@ sources:
           - name: order_delivered_customer_date
             description: Shows the actual order delivery date to the customer.
           - name: order_estimated_delivery_date
-            description: Shows the actual order delivery date to the customer.
+            description: Shows the estimated delivery date that was informed to customer at the purchase moment.
       - name: fp_olist_products_dataset
         description: This dataset includes data about the products sold by Olist.
         columns:
