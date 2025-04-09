@@ -145,3 +145,10 @@ sources:
             description: seller city name
           - name: seller_state
             description: seller state
+      - name: fp_product_category_name_translation
+        description: Translates the product_category_name to english.
+        columns:
+          - name: product_category_name
+            description: category name in Portuguese
+          - name: product_category_name_english
+            description: category name in English
