@@ -15,10 +15,10 @@ modified as (
         order_item_id,
         product_id,
         seller_id,
-        shipping_limit_date
-        price,
-        freight_value,
-        price + freight_value as total_value
+        shipping_limit_date,
+        cast(price as float64) as price,
+        cast(freight_value as float64) as freight_value,
+        cast(price as float64) + cast(freight_value as float64) as total_value
     from source
 
 )

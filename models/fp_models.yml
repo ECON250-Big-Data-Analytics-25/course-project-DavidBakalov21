@@ -170,3 +170,42 @@ models:
         description: category name in English
       - name: is_identical
         description: column to define whether names are identical
+  - name: fp_sales_full
+    description: Combined table, containing inforramtion from all tables, like info about seller, customer, the time order was approved,  total payment value
+    columns:
+      - name: order_id
+        description: Unique identifier for the order.
+      - name: customer_id
+        description: Foreign key referencing the customer.
+      - name: customer_state
+        description: State where the customer lives.
+      - name: customer_city
+        description: City where the customer lives.
+      - name: order_status
+        description: Status of the order (e.g., delivered, shipped).
+      - name: order_purchase_timestamp
+        description: Timestamp of when the order was placed.
+      - name: order_approved_at
+        description: Timestamp of when the payment for the order was approved.
+      - name: order_delivered_customer_date
+        description: Timestamp of actual delivery to the customer.
+      - name: order_estimated_delivery_date
+        description: Estimated delivery date shown to the customer at the time of order.
+      - name: is_delivered
+        description: Boolean flag indicating whether the order was successfully delivered.
+      - name: approve_time
+        description: Number of days it took to approve the order payment.
+
+      - name: order_total_price
+        description: Sum of the prices of all items in the order.
+      - name: order_total_freight
+        description: Total freight cost for the order.
+
+      - name: product_categories_english
+        description: Array of translated product categories in the order.
+      - name: product_categories_original
+        description: Array of all original product categoris in the order.
+      - name: sellers
+        description: Array of STRUCTs containing seller data.
+      - name: payments
+        description: Array of STRUCTs payment data.
