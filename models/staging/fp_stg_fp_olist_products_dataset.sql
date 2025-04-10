@@ -14,7 +14,7 @@ modified as (
 
     select
         product_id,
-        lower(product_category_name),
+        lower(product_category_name) as product_category_name,
         product_name_lenght,
         product_description_lenght,
         product_photos_qty,

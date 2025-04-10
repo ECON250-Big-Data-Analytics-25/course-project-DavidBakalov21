@@ -170,7 +170,7 @@ models:
         description: category name in English
       - name: is_identical
         description: column to define whether names are identical
-  - name: fp_sales_full
+  - name: fp_int_combined
     description: Combined table, containing inforramtion from all tables, like info about seller, customer, the time order was approved,  total payment value
     columns:
       - name: order_id
@@ -209,3 +209,42 @@ models:
         description: Array of STRUCTs containing seller data.
       - name: payments
         description: Array of STRUCTs payment data.
+  - name: fp_customer_behaviour
+    description: New vs. returning customers, purchase frequency, customer lifetime value (total amount of revenue received from each customer)
+    columns:
+      - name: customer_id
+        description: customer identifier.
+      - name: total_orders
+        description: Foreign key referencing the customer.
+      - name: lifetime_value
+        description: otal amount of revenue received from each customer.
+      - name: customer_type
+        description: defines whether customer new or returning
+  - name: fp_payment_analysis
+    description: Payment method trends, installment patterns, regional preferences
+    columns:
+      - name: order_month
+        description: month from the order.
+      - name: customer_state
+        description: State where customer lives.
+      - name: payment_type
+        description: method of payment chosen by the customer.
+      - name: payment_installments
+        description: number of installments chosen by the customer.
+      - name: num_payments
+        description: number of payments.
+      - name: total_payment_value
+        description: total transactional value
+      - name: avg_payment_value
+        description: average transactional value
+  - name: fp_order_performance_analysis
+    description: monthly order metrics including number of orders, revenue, split by one or more categorical fields
+    columns:
+      - name: order_month
+        description: month from the order.
+      - name: order_status
+        description: Reference to the order status (delivered, shipped, etc).
+      - name: total_orders
+        description: total amount of orders.
+      - name: total_revenue
+        description: total revenue from orders
