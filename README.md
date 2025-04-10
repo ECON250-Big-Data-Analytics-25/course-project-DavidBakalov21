@@ -1,114 +1,41 @@
-Welcome to your new dbt project!
+Explanation of part4 decisions:
 
-# Installation
+Let's start from partitioning. Partitioning is basicaly dividing table into smaller parts, to optimize query as bigQuery will just skip partitions that are not suitable for filter, thats why I decided to partition by order purchase time_stamp, since all other timestamp columns (except for order_estimated_delivery_date) had nulls, which can create null partions
 
-The following tutorial assumes you're already familiar with git and command line usage.
+Next goes clustering, basically sorting within partions. I decided to use customer_id since it repeats across many rows so it will be easisier for bigQuery to sort by it
 
-## Getting the code to your local machine
-1. Fork this github repository into your local account
+Then goes many cte's and their joins. From interesting I decided to use inner joins not to have situation where I only got a small part of the data.
 
-2. Copy it to your local machine: `git clone https://github.com/your_account_name/econ250_2025.git`
+Project overview:
 
+This project analyzes olist sales data
+It consists of 7 datasets:
+olist_customers_dataset.csv- data about customers
+olist_order_items_dataset.csv -data about products inside items
+olist_order_payments_dataset.csv - how customer paid for his order
+olist_orders_dataset.csv - general order data
+olist_products_dataset.csv - data about products
+olist_sellers_dataset.csv - data about who sell product
+product_category_name_translation.csv - names of categories and thier translation to english language
 
+Interesting thing: when I uploaded product_category_name_translation.csv it required skipping first row as header, since BigQUery considered it as data.
 
-## gcloud authentication
+Staging:
+Can't say much about sellers and customers since no derived columns can be generated from that data
 
-To run queries from your command line, you'll first need to install `gcloud` utility.
+fp_stg_fp_olist_order_items_dataset- casted all numeric values to float, since BigQuery for some reason considered them as a timestamp. Created total_value, which represents total vlaue for item
 
-Follow the instructions here: https://cloud.google.com/sdk/docs/install. After installation you should have `gcloud` command available for running in the terminal.
+fp_stg_fp_olist_order_payments_dataset - created to derived columns, one represents whether customer paid with debit card, other shows whether user defined paymnet method
 
-Now, try to authenticate with your **kse email** using the following command: 
+fp_stg_fp_olist_orders_dataset - add column which show how many days it is needed to approve order
 
-```bash
-gcloud auth application-default login \
-  --scopes=https://www.googleapis.com/auth/bigquery,\
-https://www.googleapis.com/auth/drive.readonly,\
-https://www.googleapis.com/auth/iam.test,\
-https://www.googleapis.com/auth/cloud-platform
-```
+fp_stg_fp_olist_products_dataset - added column, to calculate product volume
 
-Now, when you run the following commands something similar should be response: 
+fp_stg_fp_product_category_name_translation - added columns to define whether category names are identical
 
-```bash
-$ gcloud auth list
+Mart models:
+fp_customer_behaviour: New vs. returning customers, purchase frequency, customer lifetime value (total amount of revenue received from each customer)
 
-     Credentialed Accounts
-ACTIVE  ACCOUNT
-*       o_omelchenko@kse.org.ua
+fp_payment_analysis: Payment method trends, installment patterns, regional preferences
 
-```
-To set the active project, run the following: 
-
-```bash
-gcloud config set project econ250-2025
-```
-
-
-## venv and libraries
-Prerequisites: having Python installed on your machine. 
-Following instructions are for Linux or WSL; if you'd like to run Windows - please refer to the documentation below.
-
-```bash
-
-# change directory to the one you just copied from github
-cd econ250_2025 
-
-# create and activate venv
-python3 -m venv env 
-source env/bin/activate
-
-pip install -r requirements.txt
-
-```
-
-If everything is installed correctly, you should run the following commands successfully: 
-
-
-```
-$ dbt --version
-
-Core:
-  - installed: 1.9.3
-  - latest:    1.9.3 - Up to date!
-
-Plugins:
-  - bigquery: 1.9.1 - Up to date!
-```
-
-
-For more detailed reference, refer to the official documentation here: 
-- https://docs.getdbt.com/docs/core/pip-install
-- https://docs.getdbt.com/docs/core/connect-data-platform/bigquery-setup#local-oauth-gcloud-setup
-
-## Adjusting the configuration
-
-You'll need to specify your own dataset to save your models to. To do so, navigate to the `profiles.yml` in the root directory of the project, and replace `o_omelchenko` with your bigquery dataset name with which you have been working previously.
-
-
-
-
-## Final check
-
-Try running the following command:
-- dbt run
-
-If everything is set up well, you will see similar output: 
-
-```log
-❯ dbt run
-01:18:56  Running with dbt=1.9.3
-01:18:57  Registered adapter: bigquery=1.9.1
-01:18:57  Found 2 models, 4 data tests, 491 macros
-01:18:57  
-01:18:57  Concurrency: 2 threads (target='dev')
-01:18:57  
-01:19:00  1 of 2 START sql table model o_omelchenko.my_first_dbt_model ................... [RUN]
-01:19:04  1 of 2 OK created sql table model o_omelchenko.my_first_dbt_model .............. [CREATE TABLE (2.0 rows, 0 processed) in 4.44s]
-01:19:04  2 of 2 START sql view model o_omelchenko.my_second_dbt_model ................... [RUN]
-01:19:06  2 of 2 OK created sql view model o_omelchenko.my_second_dbt_model .............. [CREATE VIEW (0 processed) in 2.13s]
-01:19:06  
-01:19:06  Finished running 1 table model, 1 view model in 0 hours 0 minutes and 9.64 seconds (9.64s).
-```
-
-If you have any troubles with installation, please contact the course instructor (Oleh Omelchenko) in slack for assist.
-
+fp_order_performance_analysis: monthly order metrics including number of orders, revenue, split by one or more categorical fields

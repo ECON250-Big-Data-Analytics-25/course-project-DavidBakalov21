@@ -1,0 +1,250 @@
+version: 2
+
+models:
+  - name: fp_stg_fp_olist_customers_dataset
+    description: Staging for customers dataset, it appears that, no derived columns can be calculated
+    columns:
+      - name: customer_id
+        description: key to the orders dataset. Each order has a unique customer_id.
+        tests:
+          - not_null
+      - name: customer_unique_id
+        description: unique identifier of a customer.
+        tests:
+          - not_null
+      - name: customer_zip_code_prefix
+        description: first five digits of customer zip code
+      - name: customer_city
+        description: customer city name
+      - name: customer_state
+        description: customer state
+  - name: fp_stg_fp_olist_order_items_dataset
+    description: Staging for order itmes dataset, just added total value as sum of price and freight value
+    columns:
+      - name: order_id
+        description: order unique identifier
+        tests:
+          - not_null
+      - name: order_item_id
+        description: sequential number identifying number of items included in the same order.
+        tests:
+          - not_null
+      - name: product_id
+        description: product unique identifier
+        tests:
+          - not_null
+      - name: seller_id
+        description: seller unique identifier
+        tests:
+          - not_null
+      - name: shipping_limit_date
+        description: Shows the seller shipping limit date for handling the order over to the logistic partner.
+      - name: price
+        description: item price
+      - name: freight_value
+        description: item freight value item (if an order has more than one item the freight value is splitted between items)
+      - name: total_value
+        description: sum of price and freight value
+
+  - name: fp_stg_fp_olist_order_payments_dataset
+    description: Staging for order payments dataset, added two derived columns first one is to define whether user used debit card, second one is to define whether type is defined
+    columns:
+      - name: order_id
+        description: unique identifier of an order.
+        tests:
+          - not_null
+      - name: payment_sequential
+        description: a customer may pay an order with more than one payment method. If he does so, a sequence will be created to accommodate all payments.
+      - name: payment_type
+        description: method of payment chosen by the customer.
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - credit_card
+                - voucher
+                - not_defined
+                - boleto
+                - debit_card
+      - name: payment_installments
+        description: number of installments chosen by the customer.
+      - name: payment_value
+        description: transaction value.
+      - name: is_debit_card
+        description: checks whether user payed with debit card
+        tests:
+          - not_null
+      - name: not_defined
+        description: checks whether pament_type is defined
+        tests:
+          - not_null
+
+  - name: fp_stg_fp_olist_orders_dataset
+    description: Staging for orders dataset, added two derived columns first one is to define whether order is delivered, second one is to how much time it takes to approve the order
+    columns:
+      - name: order_id
+        description: unique identifier of the order.
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: key to the customer dataset. Each order has a unique customer_id.
+        tests:
+          - not_null
+      - name: order_status
+        description: Reference to the order status (delivered, shipped, etc).
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - approved
+                - canceled
+                - created
+                - delivered
+                - invoiced
+                - processing
+                - shipped
+                - unavailable
+      - name: order_purchase_timestamp
+        description: Shows the purchase timestamp.
+      - name: order_approved_at
+        description: Shows the payment approval timestamp.
+      - name: order_delivered_carrier_date
+        description: Shows the order posting timestamp. When it was handled to the logistic partner.
+      - name: order_delivered_customer_date
+        description: Shows the actual order delivery date to the customer.
+      - name: order_estimated_delivery_date
+        description: Shows the estimated delivery date that was informed to customer at the purchase moment.
+      - name: is_delivered
+        description: shows whether order delivered
+      - name: approve_time
+        description: shows how many day it takes to approve
+
+  - name: fp_stg_fp_olist_products_dataset
+    description: "Staging for products dataset, derived column: calculate product volume"
+    columns:
+      - name: product_id
+        description: unique product identifier
+        tests:
+          - unique
+          - not_null
+      - name: product_category_name
+        description: root category of product, in Portuguese.
+      - name: product_name_lenght
+        description: number of characters extracted from the product name.
+      - name: product_description_lenght
+        description: number of characters extracted from the product description.
+      - name: product_photos_qty
+        description: number of product published photos
+      - name: product_weight_g
+        description: product weight measured in grams.
+      - name: product_length_cm
+        description: product length measured in centimeters.
+      - name: product_height_cm
+        description: product height measured in centimeters.
+      - name: product_width_cm
+        description: product width measured in centimeters.
+      - name: product_volume_cm3
+        description: product volume in cm3
+
+  - name: fp_stg_fp_olist_sellers_dataset
+    description: "Staging for sellers dataset, no derived columns can be calculated"
+    columns:
+      - name: seller_id
+        description: seller unique identifier
+        tests:
+          - unique
+          - not_null
+      - name: seller_zip_code_prefix
+        description: first 5 digits of seller zip code
+      - name: seller_city
+        description: seller city name
+      - name: seller_state
+        description: seller state
+  - name: fp_product_category_name_translation
+    description: Translates the product_category_name to english.
+    columns:
+      - name: product_category_name
+        description: category name in Portuguese
+      - name: product_category_name_english
+        description: category name in English
+      - name: is_identical
+        description: column to define whether names are identical
+  - name: fp_int_combined
+    description: Combined table, containing inforramtion from all tables, like info about seller, customer, the time order was approved,  total payment value
+    columns:
+      - name: order_id
+        description: Unique identifier for the order.
+      - name: customer_id
+        description: Foreign key referencing the customer.
+      - name: customer_state
+        description: State where the customer lives.
+      - name: customer_city
+        description: City where the customer lives.
+      - name: order_status
+        description: Status of the order (e.g., delivered, shipped).
+      - name: order_purchase_timestamp
+        description: Timestamp of when the order was placed.
+      - name: order_approved_at
+        description: Timestamp of when the payment for the order was approved.
+      - name: order_delivered_customer_date
+        description: Timestamp of actual delivery to the customer.
+      - name: order_estimated_delivery_date
+        description: Estimated delivery date shown to the customer at the time of order.
+      - name: is_delivered
+        description: Boolean flag indicating whether the order was successfully delivered.
+      - name: approve_time
+        description: Number of days it took to approve the order payment.
+
+      - name: order_total_price
+        description: Sum of the prices of all items in the order.
+      - name: order_total_freight
+        description: Total freight cost for the order.
+
+      - name: product_categories_english
+        description: Array of translated product categories in the order.
+      - name: product_categories_original
+        description: Array of all original product categoris in the order.
+      - name: sellers
+        description: Array of STRUCTs containing seller data.
+      - name: payments
+        description: Array of STRUCTs payment data.
+  - name: fp_customer_behaviour
+    description: New vs. returning customers, purchase frequency, customer lifetime value (total amount of revenue received from each customer)
+    columns:
+      - name: customer_id
+        description: customer identifier.
+      - name: total_orders
+        description: Foreign key referencing the customer.
+      - name: lifetime_value
+        description: otal amount of revenue received from each customer.
+      - name: customer_type
+        description: defines whether customer new or returning
+  - name: fp_payment_analysis
+    description: Payment method trends, installment patterns, regional preferences
+    columns:
+      - name: order_month
+        description: month from the order.
+      - name: customer_state
+        description: State where customer lives.
+      - name: payment_type
+        description: method of payment chosen by the customer.
+      - name: payment_installments
+        description: number of installments chosen by the customer.
+      - name: num_payments
+        description: number of payments.
+      - name: total_payment_value
+        description: total transactional value
+      - name: avg_payment_value
+        description: average transactional value
+  - name: fp_order_performance_analysis
+    description: monthly order metrics including number of orders, revenue, split by one or more categorical fields
+    columns:
+      - name: order_month
+        description: month from the order.
+      - name: order_status
+        description: Reference to the order status (delivered, shipped, etc).
+      - name: total_orders
+        description: total amount of orders.
+      - name: total_revenue
+        description: total revenue from orders
