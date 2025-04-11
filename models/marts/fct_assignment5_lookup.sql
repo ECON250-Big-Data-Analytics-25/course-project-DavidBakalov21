@@ -15,7 +15,7 @@ with source_data as (
   where date(datehour) >= (
     select max(last_appearance)
     from {{ this }}
-  )
+  )-1
   {% endif %}
 )
 

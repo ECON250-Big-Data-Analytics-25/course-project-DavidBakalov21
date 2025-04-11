@@ -42,38 +42,36 @@ envdaviddavid@MacBook-Air-david course-project-DavidBakalov21 % dbt run --select
 
 PART 2 RUN 1:
 
-envdaviddavid@MacBook-Air-david course-project-DavidBakalov21 % dbt run --select fct_assignment5_l
-ookup
-07:12:50 Running with dbt=1.9.3
-07:12:51 Registered adapter: bigquery=1.9.1
-07:12:51 Found 16 models, 1 seed, 11 data tests, 12 sources, 491 macros
-07:12:51  
-07:12:51 Concurrency: 2 threads (target='dev')
-07:12:51  
-07:12:53 1 of 1 START sql incremental model dbakalov.fct_assignment5_lookup ............. [RUN]
-07:13:01 1 of 1 OK created sql incremental model dbakalov.fct_assignment5_lookup ........ [CREATE TABLE (928.8k rows, 439.8 MiB processed) in 7.88s]
-07:13:01  
-07:13:01 Finished running 1 incremental model in 0 hours 0 minutes and 9.43 seconds (9.43s).
-07:13:01  
-07:13:01 Completed successfully
-07:13:01  
-07:13:01 Done. PASS=1 WARN=0 ERROR=0 SKIP=0 TOTAL=1
-envdaviddavid@MacBook-Air-david course-project-DavidBakalov21 %
+envdaviddavid@MacBook-Air-david course-project-DavidBakalov21 % dbt run --select fct_assignment5_lookup
+19:58:03 Running with dbt=1.9.3
+19:58:03 Registered adapter: bigquery=1.9.1
+19:58:03 Found 16 models, 1 seed, 11 data tests, 12 sources, 491 macros
+19:58:03  
+19:58:03 Concurrency: 2 threads (target='dev')
+19:58:03  
+19:58:05 1 of 1 START sql incremental model dbakalov.fct_assignment5_lookup ............. [RUN]
+19:58:13 1 of 1 OK created sql incremental model dbakalov.fct_assignment5_lookup ........ [CREATE TABLE (928.8k rows, 439.8 MiB processed) in 8.00s]
+19:58:13  
+19:58:13 Finished running 1 incremental model in 0 hours 0 minutes and 9.88 seconds (9.88s).
+19:58:13  
+19:58:13 Completed successfully
+19:58:13  
+19:58:13 Done. PASS=1 WARN=0 ERROR=0 SKIP=0 TOTAL=1
 
 PART 2 RUN 2:
 
 envdaviddavid@MacBook-Air-david course-project-DavidBakalov21 % dbt run --select fct_assignment5_lookup
-07:16:24 Running with dbt=1.9.3
-07:16:24 Registered adapter: bigquery=1.9.1
-07:16:24 Found 16 models, 1 seed, 11 data tests, 12 sources, 491 macros
-07:16:24  
-07:16:24 Concurrency: 2 threads (target='dev')
-07:16:24  
-07:16:26 1 of 1 START sql incremental model dbakalov.fct_assignment5_lookup ............. [RUN]
-07:16:37 1 of 1 OK created sql incremental model dbakalov.fct_assignment5_lookup ........ [MERGE (409.7k rows, 140.1 MiB processed) in 11.19s]
-07:16:37  
-07:16:37 Finished running 1 incremental model in 0 hours 0 minutes and 12.56 seconds (12.56s).
-07:16:37  
-07:16:37 Completed successfully
-07:16:37  
-07:16:37 Done. PASS=1 WARN=0 ERROR=0 SKIP=0 TOTAL=1
+20:00:49 Running with dbt=1.9.3
+20:00:49 Registered adapter: bigquery=1.9.1
+20:00:49 Found 16 models, 1 seed, 11 data tests, 12 sources, 491 macros
+20:00:49  
+20:00:49 Concurrency: 2 threads (target='dev')
+20:00:49  
+20:00:52 1 of 1 START sql incremental model dbakalov.fct_assignment5_lookup ............. [RUN]
+20:01:11 1 of 1 OK created sql incremental model dbakalov.fct_assignment5_lookup ........ [MERGE (557.0k rows, 207.1 MiB processed) in 19.58s]
+20:01:11  
+20:01:11 Finished running 1 incremental model in 0 hours 0 minutes and 21.64 seconds (21.64s).
+20:01:11  
+20:01:11 Completed successfully
+20:01:11  
+20:01:11 Done. PASS=1 WARN=0 ERROR=0 SKIP=0 TOTAL=1
