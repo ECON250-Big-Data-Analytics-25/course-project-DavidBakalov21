@@ -8,11 +8,11 @@ unique_key ='title'
 with source_data as (
   select
     title,
-    date(timestamp(datehour)) as date,
+    date(datehour) as date,
     views
   from {{ source('test_dataset', 'assignment5_input') }}
   {% if is_incremental() %}
-  where date(timestamp(datehour)) >= (
+  where date(datehour) >= (
     select max(last_appearance)
     from {{ this }}
   )

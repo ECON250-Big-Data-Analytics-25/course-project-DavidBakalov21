@@ -12,13 +12,13 @@ partition_by = {
 
 
 SELECT 
-  DATE(TIMESTAMP(datehour)) AS date,
+  DATE(datehour) AS date,
   title,
   SUM(views) AS views,
   CURRENT_TIMESTAMP() AS insert_time
 FROM {{ source('test_dataset', 'assignment5_input') }}
 {% if is_incremental() %}
-WHERE DATE(TIMESTAMP(datehour)) >= _dbt_max_partition - 1
+WHERE DATE(datehour) >= _dbt_max_partition - 1
 {% endif %}
 GROUP BY date, title
 
